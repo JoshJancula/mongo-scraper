@@ -32,6 +32,11 @@ mongoose.Promise = Promise;
 mongoose.connect("mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp", {
   useMongoClient: true
 });
+mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp
+
+// mongoose.connect("mongodb://localhost/articles", {
+//   useMongoClient: true
+// });
 
 
 // Routes
@@ -100,9 +105,9 @@ app.get("/articles", function(req, res) {
 });
 
 // delete all articles
-app.post("/deleteAll", function(req, res) {
+app.delete("/deleteAll", function(req, res) {
   // Remove all the articles
-  db.Article.remove({});
+  db.Article.remove( { } );
     
 });
 
@@ -130,7 +135,7 @@ app.post("/articles/:id", function(req, res) {
   db.Note
     .create(req.body)
     .then(function(dbNote) {
-      
+      // get the article and add any notes that don't already exist
       return db.Article.findOneAndUpdate({ _id: req.params.id }, { $addToSet: { note: dbNote._id }}, { new: true });
     })
     .then(function(dbArticle) {
@@ -143,39 +148,28 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
-app.post("/articles/deleteNote/:articleId/:noteId", function(req, res) {
-  console.log("delete server " + req.params.articleId + " " + req.params.noteId);
- db.Article.findOneAndUpdate(
-  { _id: req.params.articleId },
-  { $pull: { note: { _id: req.params.noteId } } }
-).then(function(dbArticle) {
-      // If we were able to successfully update an Article, send it back to the client
-      res.json(dbArticle);
-      return dbArticle;
-    })
-    .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
+// Delete a note
+app.delete("/notes/delete/:note_id/:article_id", function(req, res) {
+  // Use the note id to find and delete it
+  db.Note.findOneAndRemove({ "_id": req.params.note_id }, function(err) {
+    // if any errors occur...
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else { // go update the article now that we're missing a note
+      db.Article.findOneAndUpdate({ "_id": req.params.article_id }, {$pull: {note: req.params.note_id}})
+        .exec(function(err) {
+          // if any errors occur...
+          if (err) {
+            console.log(err);
+            res.send(err);
+          }
+        });
+    }
+  });
+});
 
-})
-
-// Route for deleting a note
-// app.post("/articles/deleteNote/:id", function(req, res) {
-//     // grab the note by its id 
-//     db.Note
-//         .remove({ // and remove it
-//             _id: req.params.id
-//         })
-//         // return the notes left
-//         .then(function(dbNote) {
-//             res.json(dbNote);
-//         })
-//         .catch(function(err) {
-//             // If an error occurs, send it back to the client
-//             res.json(err);
-//         });
-// });
 
 // Route for saving an article
 app.post("/saved/:id", function(req, res) {  // grab it by the id and save it

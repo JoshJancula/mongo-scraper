@@ -5,7 +5,7 @@ function getJson() {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the information on the page
-      $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "<a href='" + data[i].link + "'>" + "Article link" + '</a>' + "</p>" +
+      $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "<a href='" + data[i].link + "'>" + "Article link" + '</a>' + "</h3>" + 
         "<button class='view-notes' type='button' data-target='#noteModal' data-toggle='modal' data-id='" + data[i]._id + "'>" + "View Notes" + "</button>" +
         "<button class='save-article' type='submit' data-id='" + data[i]._id + "'>" + "Save Article" + "</button>"  + "<br>" + "<br>" + "<br>"
         
@@ -130,8 +130,7 @@ $(document).on("click", ".delete-article", function() {
     })
     // With that done...
     .done(function(data) { // refresh the page
-    console.log("article deleted: " + data);
-     location.reload();
+    window.location="/";
     });
 
 });
@@ -139,23 +138,24 @@ $(document).on("click", ".delete-article", function() {
 
 // When you click the delete-note button
 $(document).on("click", ".delete-note", function() {
-  // Grab the id associated with this note
+  // Grab the id associated with this note  
   var thisId = $(this).attr("data-id");
    var articleId = $(this).attr("articleId");
-console.log("inside delete-note " + articleId + " " + thisId);
-  // Run POST method
+console.log("inside delete-note " + thisId + " " + articleId);
+  // Run DELETE method
   $.ajax({
-      method: "POST",
-      url: "/articles/deleteNote/" + articleId +"/" + thisId,
+      method: "DELETE",
+      url: "/notes/deleteNote/" + articleId + "/" + thisId,
     })
     // With that done...
-    .done(function(data) { // refresh the page
-     $("#noteModal").modal("hide");
+    .done(function(data) { // hide the modal
+     $("#noteModal").modal("hide");// tell me it was a success
     console.log("delete successful: " + data);
-     // location.reload();
+      window.location="/"; // refresh window
     });
 
 });
+
 
 // when you click on view saved
  $("#view-saved").on("click", function() {
@@ -169,7 +169,6 @@ console.log("inside delete-note " + articleId + " " + thisId);
       // Display the information on the page
       $("#savedArticles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "<a href='" + data[i].link + "'>" + "Article link" + '</a>' + "</p>" +
         "<button class='view-notes' type='button' data-target='#noteModal' data-toggle='modal' data-id='" + data[i]._id + "'>" + "View Notes" + "</button>" +
-        // "<button class='save-article' type='submit' data-id='" + data[i]._id + "'>" + "Save Article" + "</button>" +
         "<button class='delete-article' type='submit' data-id='" + data[i]._id + "'>" + "Delete Article" + "</button>" + "<br />" + "<br />"
       );
     }
@@ -194,7 +193,7 @@ $(document).on("click", "#run-scrape", function() {
   $("#articles").empty();
   // run a call to delete the articles
    $.ajax({
-      method: "POST",
+      method: "DELETE",
       url: "/articles/deleteAll" 
     }).done(function() {
       $.ajax({// then run the scrape
@@ -203,7 +202,7 @@ $(document).on("click", "#run-scrape", function() {
       }).done(function(data) {
        console.log(data);
       })
-       location.reload();
+       window.location="/";
     })
 
 });
