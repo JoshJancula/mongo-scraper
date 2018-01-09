@@ -130,7 +130,7 @@ $(document).on("click", ".delete-article", function() {
     })
     // With that done...
     .done(function(data) { // refresh the page
-    window.location="/";
+ location.reload();
     });
 
 });
@@ -145,13 +145,12 @@ console.log("inside delete-note " + thisId + " " + articleId);
   // Run DELETE method
   $.ajax({
       method: "DELETE",
-      url: "/notes/deleteNote/" + articleId + "/" + thisId,
+      url: "/notes/deleteNote/" + thisId + "/" + articleId,
     })
-    // With that done...
     .done(function(data) { // hide the modal
      $("#noteModal").modal("hide");// tell me it was a success
     console.log("delete successful: " + data);
-      window.location="/"; // refresh window
+    location.reload();
     });
 
 });
@@ -201,9 +200,12 @@ $(document).on("click", "#run-scrape", function() {
         url: "/scrape"
       }).done(function(data) {
        console.log(data);
-      })
-       window.location="/";
-    })
+        // getJson();
+         // reload the page
+      location.reload();
+      });
+    
+    });
 
 });
 

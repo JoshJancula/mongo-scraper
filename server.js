@@ -32,12 +32,6 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI, {
   useMongoClient: true
 });
-// mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp
-// mongoose.Promise = Promise;
-// mongoose.connect("mongodb://localhost/articles", {
-//   useMongoClient: true
-// });
-
 
 // Routes
 // A GET route for scraping the onion 
@@ -70,8 +64,9 @@ app.get("/scrape", function(req, res) {
                     res.json(err);
                 });
         });
+         res.send("soemthing");
     });
-    res.redirect("/");
+   
 });
 
 // Route for getting all Articles from the db
@@ -105,9 +100,12 @@ app.get("/articles", function(req, res) {
 });
 
 // delete all articles
-app.delete("/deleteAll", function(req, res) {
+app.delete("/articles/deleteAll", function(req, res) {
   // Remove all the articles
-  db.Article.remove( { } );
+  db.Article.remove( { } ).then(function(err) {
+    res.json(err);
+  })
+  
     
 });
 
@@ -149,21 +147,23 @@ app.post("/articles/:id", function(req, res) {
 });
 
 // Delete a note
-app.delete("/notes/delete/:note_id/:article_id", function(req, res) {
+app.delete("/notes/deleteNote/:note_id/:article_id", function(req, res) {
   // Use the note id to find and delete it
-  db.Note.findOneAndRemove({ "_id": req.params.note_id }, function(err) {
+  db.Note.findOneAndRemove({ _id: req.params.note_id }, function(err) {
     // if any errors occur...
     if (err) {
       console.log(err);
       res.send(err);
     }
     else { // go update the article now that we're missing a note
-      db.Article.findOneAndUpdate({ "_id": req.params.article_id }, {$pull: {note: req.params.note_id}})
-        .exec(function(err) {
+      db.Article.findOneAndUpdate({ _id: req.params.article_id }, {$pull: {note: req.params.note_id}})
+        .exec(function(err, data) {
           // if any errors occur...
           if (err) {
             console.log(err);
             res.send(err);
+          } else {
+            res.send(data);
           }
         });
     }
