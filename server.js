@@ -32,8 +32,8 @@ mongoose.Promise = Promise;
 mongoose.connect("mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp", {
   useMongoClient: true
 });
-mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp
-
+// mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp
+// mongoose.Promise = Promise;
 // mongoose.connect("mongodb://localhost/articles", {
 //   useMongoClient: true
 // });
