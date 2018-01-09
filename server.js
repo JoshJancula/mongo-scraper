@@ -24,12 +24,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/articles";
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/articles", {
+mongoose.connect("mongodb://heroku_sdrng8sp:9lkkc1ggo0tjbmct5m9c48u0i2@ds247587.mlab.com:47587/heroku_sdrng8sp", {
   useMongoClient: true
 });
+
 
 // Routes
 // A GET route for scraping the onion 
