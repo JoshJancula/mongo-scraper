@@ -5,9 +5,10 @@ function getJson() {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the information on the page
-      $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "<a href='" + data[i].link + "'>" + "Article link" + '</a>' + "</h3>" + 
+      $("#articles").append("<div class='panel panel-primary'> <div class='panel-heading'><h3 data-id='" + data[i]._id + "'>" + data[i].title + "<br />" +  "</h3></div>" + "<div class='panel-body'><p>" + data[i].summary + "</p>" + "<br>" +
+      "<h5>" + "<a href='" + data[i].link + "'>" + "Article link" + '</a>' + "</h5>" +
         "<button class='view-notes' type='button' data-target='#noteModal' data-toggle='modal' data-id='" + data[i]._id + "'>" + "View Notes" + "</button>" +
-        "<button class='save-article' type='submit' data-id='" + data[i]._id + "'>" + "Save Article" + "</button>"  + "<br>" + "<br>" + "<br>"
+        "<button class='save-article' type='submit' data-id='" + data[i]._id + "'>" + "Save Article" + "</button></div></div>"  + "<br>" + "<br>" + "<br>"
         
       );
     }
